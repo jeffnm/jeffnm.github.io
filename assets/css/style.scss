@@ -1,0 +1,36 @@
+---
+---
+
+@import "{{ site.theme }}";	
+
+.site-nav .page-link {
+	padding: 0.5em;
+	border: 1px solid gray;
+}
+
+.site-nav .active-link {
+	color: white;
+	background-color: #c54141;
+}
+
+.post-header {
+	padding-top: 20px;
+	padding-bottom: 15px;
+}
+
+hr {
+	padding: 0;
+	margin: 0;
+}
+
+footer span.link {
+	vertical-align: middle;
+}
+
+footer svg {
+	vertical-align: middle;
+}
+
+ul.post-list li {
+	list-style: none;
+}

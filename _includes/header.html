@@ -1,0 +1,29 @@
+<header>
+  <h1><a class="site-title" href="{{ "/" | relative_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
+  <h2>{{ site.description | default: site.github.project_tagline }}</h2>
+
+  <div class="wrapper">
+
+  {% assign default_paths = site.pages | map: "path" %}
+  {% assign page_paths = site.header_pages | default: default_paths %}
+  
+  
+     {% if page_paths %}
+      <nav class="site-nav">
+        <div class="trigger">
+          {% for path in page_paths %}
+            {% assign my_page = site.pages | where: "path", path | first %}
+            {% if my_page.url == page.url %}
+            {% assign active_page_class = "active-link page-link" %}
+            {% endif %}
+            {% assign page_link_class = active_page_class | default: "page-link" %}
+            {% if my_page.title %}
+            <a class="{{page_link_class}}" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
+            {% endif %}
+            {% assign active_page_class = false %}
+          {% endfor %}
+        </div>
+      </nav>
+    {% endif %}
+  </div>
+</header>
