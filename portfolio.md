@@ -1,7 +1,5 @@
 ---
-layout: page
+layout: portfolio
 title: Portfolio
 permalink: /portfolio/
 ---
-
-Not another one!
