@@ -25,8 +25,7 @@ lang: en
 
 # Build settings
 markdown: kramdown
-#theme: jekyll-theme-tactile
-theme: jekyll-theme-minimal
+theme: jekyll-theme-tactile
 gems:
   - jekyll-feed
 exclude:
