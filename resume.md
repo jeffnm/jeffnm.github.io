@@ -57,10 +57,10 @@ permalink: /resume/
 
 ## Skills
 <div class="skill-list" markdown="1">
-*   HTML, CSS, PHP, JavaScript, Python, Flash
+*   HTML, CSS, PHP, JavaScript, Python
 *   SQL, XML, JSON
-*   Drupal, dotCMS, OJS
-*   Wireframing and Sitemapping.
+*   Drupal, OJS
+*   Wireframing and Sitemapping
 *   Adobe Creative Suite & MS Office
 *   CORAL-ERM
 *   Unix
