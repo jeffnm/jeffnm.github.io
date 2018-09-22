@@ -14,19 +14,20 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Jeffrey Mudge
-email: jeffmudge@gmail.com
+#email: jeffmudge@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
    Librarian, Digital Initiatives
-baseurl: "" # the subpath of your site, e.g. /blog
+# baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 github_username:  jeffnm
-lang: en
+lang: en-US
 
 # Build settings
 markdown: kramdown
 #theme: jekyll-theme-tactile
-remote_theme: "mmistakes/jekyll-theme-basically-basic"
+theme: jekyll-theme-basically-basic
+
 gems:
   - jekyll-feed
 exclude:
