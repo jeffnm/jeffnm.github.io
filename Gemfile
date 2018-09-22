@@ -17,6 +17,7 @@ gem "minima", "~> 2.0"
 gem "jekyll-theme-cayman"
 gem "jekyll-theme-hacker"
 gem "jekyll-theme-tactile"
+gem "jekyll-theme-basically-basic"
 
 
 # If you want to use GitHub Pages, remove the "gem "jekyll"" above and
