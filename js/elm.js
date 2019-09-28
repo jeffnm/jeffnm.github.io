@@ -5218,6 +5218,24 @@ var author$project$Main$viewPortfolioPage = A2(
 									elm$html$Html$text('GitHub')
 								])),
 							elm$html$Html$text('.')
+						])),
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('The '),
+							A2(
+							elm$html$Html$a,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$href('https://library.wheaton.edu')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Buswell library website')
+								])),
+							elm$html$Html$text(' at Wheaton College is also one of my major achievements.')
 						]))
 				]))
 		]));
