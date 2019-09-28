@@ -182,14 +182,16 @@ getNewTime =
 viewHomePage : Html Msg
 viewHomePage =
     div []
-        [ h2 [] [ text "Introduction" ]
-        , p []
-            [ text "I’m a librarian and web developer who likes trying and learning new things. This site is built using the "
-            , a
-                [ href
-                    "https://elm-lang.org/"
+        [ div []
+            [ h2 [] [ text "Introduction" ]
+            , p []
+                [ text "I’m a librarian and web developer who likes trying and learning new things. This site is built using the "
+                , a
+                    [ href
+                        "https://elm-lang.org/"
+                    ]
+                    [ text "Elm programming language." ]
                 ]
-                [ text "Elm programming language." ]
             ]
         ]
 
@@ -294,10 +296,12 @@ viewResumePage =
 viewPortfolioPage : Html Msg
 viewPortfolioPage =
     div []
-        [ h2 [] [ text "Portfolio" ]
-        , div []
-            [ p [] [ text "At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
-            , p [] [ text "The ", a [ href "https://library.wheaton.edu" ] [ text "Buswell library website" ], text " at Wheaton College is also one of my major achievements." ]
+        [ div []
+            [ h2 [] [ text "Portfolio" ]
+            , div []
+                [ p [] [ text "At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
+                , p [] [ text "The ", a [ href "https://library.wheaton.edu" ] [ text "Buswell library website" ], text " at Wheaton College is also one of my major achievements." ]
+                ]
             ]
         ]
 

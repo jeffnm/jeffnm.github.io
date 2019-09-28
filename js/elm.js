@@ -5160,27 +5160,33 @@ var author$project$Main$viewHomePage = A2(
 	_List_fromArray(
 		[
 			A2(
-			elm$html$Html$h2,
+			elm$html$Html$div,
 			_List_Nil,
 			_List_fromArray(
 				[
-					elm$html$Html$text('Introduction')
-				])),
-			A2(
-			elm$html$Html$p,
-			_List_Nil,
-			_List_fromArray(
-				[
-					elm$html$Html$text('I’m a librarian and web developer who likes trying and learning new things. This site is built using the '),
 					A2(
-					elm$html$Html$a,
+					elm$html$Html$h2,
+					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$href('https://elm-lang.org/')
-						]),
+							elm$html$Html$text('Introduction')
+						])),
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Elm programming language.')
+							elm$html$Html$text('I’m a librarian and web developer who likes trying and learning new things. This site is built using the '),
+							A2(
+							elm$html$Html$a,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$href('https://elm-lang.org/')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Elm programming language.')
+								]))
 						]))
 				]))
 		]));
@@ -5190,52 +5196,58 @@ var author$project$Main$viewPortfolioPage = A2(
 	_List_fromArray(
 		[
 			A2(
-			elm$html$Html$h2,
-			_List_Nil,
-			_List_fromArray(
-				[
-					elm$html$Html$text('Portfolio')
-				])),
-			A2(
 			elm$html$Html$div,
 			_List_Nil,
 			_List_fromArray(
 				[
 					A2(
-					elm$html$Html$p,
+					elm$html$Html$h2,
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at '),
-							A2(
-							elm$html$Html$a,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$href('https://github.com/jeffnm')
-								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text('GitHub')
-								])),
-							elm$html$Html$text('.')
+							elm$html$Html$text('Portfolio')
 						])),
 					A2(
-					elm$html$Html$p,
+					elm$html$Html$div,
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('The '),
 							A2(
-							elm$html$Html$a,
+							elm$html$Html$p,
+							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$Attributes$href('https://library.wheaton.edu')
-								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text('Buswell library website')
+									elm$html$Html$text('At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at '),
+									A2(
+									elm$html$Html$a,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$href('https://github.com/jeffnm')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('GitHub')
+										])),
+									elm$html$Html$text('.')
 								])),
-							elm$html$Html$text(' at Wheaton College is also one of my major achievements.')
+							A2(
+							elm$html$Html$p,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('The '),
+									A2(
+									elm$html$Html$a,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$href('https://library.wheaton.edu')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('Buswell library website')
+										])),
+									elm$html$Html$text(' at Wheaton College is also one of my major achievements.')
+								]))
 						]))
 				]))
 		]));
