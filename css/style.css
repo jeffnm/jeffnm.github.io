@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  padding: 0;
+  color: #000000;
+}
+
+.wrapper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background-color: #cf5c36;
+  height: 100px;
+  color: #eee5e9
+}
+
+.header h1 {
+  margin: 0;
+  text-align: left;
+  padding: 30px;
+}
+
+.menu {
+  width: 100%;
+  background-color: #7c7c7c;
+}
+
+.menu ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu li {
+  display: inline-block;
+  padding: 30px;
+  padding-top: 20px;
+  padding-bottom:20px;
+
+}
+.menu li.inactive {
+  color: #eee5e9;
+}
+.menu li:hover, .menu .active {
+  background-color: #efc88b;
+  cursor: pointer;
+  color: #000000;
+}
+
+.mainContent {
+  margin: 30px;
+  max-width: 100%;
+
+}
+
+.resume ol, .resume ul {
+  list-style: none;
+}
+.resume h3 {
+  margin-bottom: 0;
+  margin-top: 25px;
+}
+.resume h4 {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.footer {
+  margin: 0;
+  padding-top: 20px;
+  padding-bottom:20px;
+  width: 100%;
+  background-color: #efc88b;
+  /* color: #eee5e9; */
+}
+.footer>div {
+  padding-left:30px;
+}
