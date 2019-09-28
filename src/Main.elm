@@ -295,7 +295,10 @@ viewPortfolioPage : Html Msg
 viewPortfolioPage =
     div []
         [ h2 [] [ text "Portfolio" ]
-        , div [] [ p [] [ text "At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ] ]
+        , div []
+            [ p [] [ text "At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
+            , p [] [ text "The ", a [ href "https://library.wheaton.edu" ] [ text "Buswell library website" ], text " at Wheaton College is also one of my major achievements." ]
+            ]
         ]
 
 
