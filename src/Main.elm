@@ -1,9 +1,11 @@
 module Main exposing (main)
 
+-- import Html.Events exposing (onClick)
+
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class, href, rel)
-import Html.Events exposing (onClick)
+import Html.Events.Extra.Mouse as Mouse
 import Task exposing (Task)
 import Time exposing (..)
 
@@ -122,7 +124,7 @@ viewMenu model =
     Html.div [ class "menu" ]
         [ ol []
             [ li
-                [ onClick (Nav Home)
+                [ Mouse.onClick (\event -> Nav Home)
                 , if cp == Home then
                     class "active"
 
@@ -131,7 +133,7 @@ viewMenu model =
                 ]
                 [ text "Home" ]
             , li
-                [ onClick (Nav Resume)
+                [ Mouse.onClick (\event -> Nav Resume)
                 , if cp == Resume then
                     class "active"
 
@@ -140,7 +142,7 @@ viewMenu model =
                 ]
                 [ text "Resume" ]
             , li
-                [ onClick (Nav Portfolio)
+                [ Mouse.onClick (\event -> Nav Portfolio)
                 , if cp == Portfolio then
                     class "active"
 

@@ -5877,23 +5877,114 @@ var author$project$Main$Nav = function (a) {
 };
 var author$project$Main$Portfolio = {$: 'Portfolio'};
 var author$project$Main$Resume = {$: 'Resume'};
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$defaultOptions = {preventDefault: true, stopPropagation: false};
+var elm$virtual_dom$VirtualDom$Custom = function (a) {
+	return {$: 'Custom', a: a};
 };
 var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
+var elm$html$Html$Events$custom = F2(
 	function (event, decoder) {
 		return A2(
 			elm$virtual_dom$VirtualDom$on,
 			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
+			elm$virtual_dom$VirtualDom$Custom(decoder));
 	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
+var elm$json$Json$Decode$map6 = _Json_map6;
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$Event = F6(
+	function (keys, button, clientPos, offsetPos, pagePos, screenPos) {
+		return {button: button, clientPos: clientPos, keys: keys, offsetPos: offsetPos, pagePos: pagePos, screenPos: screenPos};
+	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$int = _Json_decodeInt;
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$BackButton = {$: 'BackButton'};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$ErrorButton = {$: 'ErrorButton'};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$ForwardButton = {$: 'ForwardButton'};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$MainButton = {$: 'MainButton'};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$MiddleButton = {$: 'MiddleButton'};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$SecondButton = {$: 'SecondButton'};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$buttonFromId = function (id) {
+	switch (id) {
+		case 0:
+			return mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$MainButton;
+		case 1:
+			return mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$MiddleButton;
+		case 2:
+			return mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$SecondButton;
+		case 3:
+			return mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$BackButton;
+		case 4:
+			return mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$ForwardButton;
+		default:
+			return mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$ErrorButton;
+	}
 };
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$buttonDecoder = A2(
+	elm$json$Json$Decode$map,
+	mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$buttonFromId,
+	A2(elm$json$Json$Decode$field, 'button', elm$json$Json$Decode$int));
+var elm$json$Json$Decode$float = _Json_decodeFloat;
+var mpizenberg$elm_pointer_events$Internal$Decode$clientPos = A3(
+	elm$json$Json$Decode$map2,
+	F2(
+		function (a, b) {
+			return _Utils_Tuple2(a, b);
+		}),
+	A2(elm$json$Json$Decode$field, 'clientX', elm$json$Json$Decode$float),
+	A2(elm$json$Json$Decode$field, 'clientY', elm$json$Json$Decode$float));
+var elm$json$Json$Decode$bool = _Json_decodeBool;
+var elm$json$Json$Decode$map3 = _Json_map3;
+var mpizenberg$elm_pointer_events$Internal$Decode$Keys = F3(
+	function (alt, ctrl, shift) {
+		return {alt: alt, ctrl: ctrl, shift: shift};
+	});
+var mpizenberg$elm_pointer_events$Internal$Decode$keys = A4(
+	elm$json$Json$Decode$map3,
+	mpizenberg$elm_pointer_events$Internal$Decode$Keys,
+	A2(elm$json$Json$Decode$field, 'altKey', elm$json$Json$Decode$bool),
+	A2(elm$json$Json$Decode$field, 'ctrlKey', elm$json$Json$Decode$bool),
+	A2(elm$json$Json$Decode$field, 'shiftKey', elm$json$Json$Decode$bool));
+var mpizenberg$elm_pointer_events$Internal$Decode$offsetPos = A3(
+	elm$json$Json$Decode$map2,
+	F2(
+		function (a, b) {
+			return _Utils_Tuple2(a, b);
+		}),
+	A2(elm$json$Json$Decode$field, 'offsetX', elm$json$Json$Decode$float),
+	A2(elm$json$Json$Decode$field, 'offsetY', elm$json$Json$Decode$float));
+var mpizenberg$elm_pointer_events$Internal$Decode$pagePos = A3(
+	elm$json$Json$Decode$map2,
+	F2(
+		function (a, b) {
+			return _Utils_Tuple2(a, b);
+		}),
+	A2(elm$json$Json$Decode$field, 'pageX', elm$json$Json$Decode$float),
+	A2(elm$json$Json$Decode$field, 'pageY', elm$json$Json$Decode$float));
+var mpizenberg$elm_pointer_events$Internal$Decode$screenPos = A3(
+	elm$json$Json$Decode$map2,
+	F2(
+		function (a, b) {
+			return _Utils_Tuple2(a, b);
+		}),
+	A2(elm$json$Json$Decode$field, 'screenX', elm$json$Json$Decode$float),
+	A2(elm$json$Json$Decode$field, 'screenY', elm$json$Json$Decode$float));
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$eventDecoder = A7(elm$json$Json$Decode$map6, mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$Event, mpizenberg$elm_pointer_events$Internal$Decode$keys, mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$buttonDecoder, mpizenberg$elm_pointer_events$Internal$Decode$clientPos, mpizenberg$elm_pointer_events$Internal$Decode$offsetPos, mpizenberg$elm_pointer_events$Internal$Decode$pagePos, mpizenberg$elm_pointer_events$Internal$Decode$screenPos);
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onWithOptions = F3(
+	function (event, options, tag) {
+		return A2(
+			elm$html$Html$Events$custom,
+			event,
+			A2(
+				elm$json$Json$Decode$map,
+				function (ev) {
+					return {
+						message: tag(ev),
+						preventDefault: options.preventDefault,
+						stopPropagation: options.stopPropagation
+					};
+				},
+				mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$eventDecoder));
+	});
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onClick = A2(mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onWithOptions, 'click', mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$defaultOptions);
 var author$project$Main$viewMenu = function (model) {
 	var cp = model.currentPage;
 	return A2(
@@ -5913,8 +6004,10 @@ var author$project$Main$viewMenu = function (model) {
 						elm$html$Html$li,
 						_List_fromArray(
 							[
-								elm$html$Html$Events$onClick(
-								author$project$Main$Nav(author$project$Main$Home)),
+								mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onClick(
+								function (event) {
+									return author$project$Main$Nav(author$project$Main$Home);
+								}),
 								_Utils_eq(cp, author$project$Main$Home) ? elm$html$Html$Attributes$class('active') : elm$html$Html$Attributes$class('inactive')
 							]),
 						_List_fromArray(
@@ -5925,8 +6018,10 @@ var author$project$Main$viewMenu = function (model) {
 						elm$html$Html$li,
 						_List_fromArray(
 							[
-								elm$html$Html$Events$onClick(
-								author$project$Main$Nav(author$project$Main$Resume)),
+								mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onClick(
+								function (event) {
+									return author$project$Main$Nav(author$project$Main$Resume);
+								}),
 								_Utils_eq(cp, author$project$Main$Resume) ? elm$html$Html$Attributes$class('active') : elm$html$Html$Attributes$class('inactive')
 							]),
 						_List_fromArray(
@@ -5937,8 +6032,10 @@ var author$project$Main$viewMenu = function (model) {
 						elm$html$Html$li,
 						_List_fromArray(
 							[
-								elm$html$Html$Events$onClick(
-								author$project$Main$Nav(author$project$Main$Portfolio)),
+								mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onClick(
+								function (event) {
+									return author$project$Main$Nav(author$project$Main$Portfolio);
+								}),
 								_Utils_eq(cp, author$project$Main$Portfolio) ? elm$html$Html$Attributes$class('active') : elm$html$Html$Attributes$class('inactive')
 							]),
 						_List_fromArray(
