@@ -1,7 +1,15 @@
+:root {
+  --primary-bg-color: #cf5c36;
+  --secondary-bg-color: #7c7c7c;
+  --tertiary-bg-color: #efc88b;
+  --primary-color:#000000;
+  --secondary-color: #eee5e9;
+}
+
 body {
   margin: 0;
   padding: 0;
-  color: #000000;
+  color: var(--primary-color) ;
 }
 
 .wrapper {
@@ -13,9 +21,8 @@ body {
 }
 
 .header {
-  background-color: #cf5c36;
-  height: 100px;
-  color: #eee5e9
+  background-color: var(--primary-bg-color);
+  color: var(--secondary-color)
 }
 
 .header h1 {
@@ -26,7 +33,7 @@ body {
 
 .menu {
   width: 100%;
-  background-color: #7c7c7c;
+  background-color: var(--secondary-bg-color);
 }
 
 .menu ol {
@@ -43,12 +50,12 @@ body {
 
 }
 .menu li.inactive {
-  color: #eee5e9;
+  color: var(--secondary-color);
 }
 .menu li:hover, .menu .active {
-  background-color: #efc88b;
+  background-color: var(--tertiary-bg-color);
   cursor: pointer;
-  color: #000000;
+  color: var(--primary-color);
 }
 
 .mainContent {
@@ -57,8 +64,15 @@ body {
   padding-bottom: 4.5rem;
 }
 
+.resume .education>ol>li {
+  margin-bottom: 1em;
+}
 .resume .work ol, .resume .education ol {
   list-style: none;
+}
+
+.resume .work li {
+  box-shadow: 0px 3px var(--secondary-bg-color);
 }
 .resume h3 {
   margin-bottom: 0;
@@ -80,9 +94,9 @@ body {
   /*padding-bottom:20px; */
   width: 100%;
   height: 2.5rem;
-  background-color: #efc88b;
-  /* color: #eee5e9; */
+  background-color: var(--tertiary-bg-color);
 }
 .footer>div {
   padding-left:30px;
+  display: inline-block;
 }
