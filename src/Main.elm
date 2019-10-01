@@ -23,7 +23,8 @@ type alias Model =
     { siteTitle : String
     , pageTitle : String
     , currentPage : Page
-    , year : Int
+    , currentTime : Time.Posix
+    , timeZone : Time.Zone
     }
 
 
@@ -43,7 +44,8 @@ init flags =
     ( { siteTitle = "Jeffrey Mudge"
       , pageTitle = "Home"
       , currentPage = Home
-      , year = 1970
+      , currentTime = Time.millisToPosix 0
+      , timeZone = utc
       }
     , getNewTime
     )
@@ -67,13 +69,13 @@ update msg model =
                     ( { model | currentPage = page, pageTitle = "Home" }, Cmd.none )
 
                 Resume ->
-                    ( { model | currentPage = page, pageTitle = "Resume" }, Cmd.none )
+                    ( { model | currentPage = page, pageTitle = "Résumé" }, Cmd.none )
 
                 Portfolio ->
                     ( { model | currentPage = page, pageTitle = "Portfolio" }, Cmd.none )
 
         NewTime time ->
-            ( { model | year = Time.toYear utc time }, Cmd.none )
+            ( { model | currentTime = time }, Cmd.none )
 
 
 
@@ -140,7 +142,7 @@ viewMenu model =
                   else
                     class "inactive"
                 ]
-                [ text "Resume" ]
+                [ text "Résumé" ]
             , li
                 [ Mouse.onClick (\event -> Nav Portfolio)
                 , if cp == Portfolio then
@@ -173,7 +175,11 @@ viewContent model =
 
 viewFooter : Model -> Html Msg
 viewFooter model =
-    Html.div [ class "footer" ] [ viewCopyright model.year ]
+    Html.div [ class "footer" ]
+        [ viewCopyright (Time.toYear model.timeZone model.currentTime)
+        , viewGitHubLink
+        , viewEmailLink
+        ]
 
 
 getNewTime : Cmd Msg
@@ -283,7 +289,7 @@ viewResumePage =
         , div [ class "skills" ]
             [ h2 [] [ text "Skills" ]
             , ul []
-                [ li [] [ text "HTML, CSS, PHP, JavaScript, Python" ]
+                [ li [] [ text "HTML, CSS, PHP, JavaScript, Elm, Python" ]
                 , li [] [ text "SQL, XML, JSON" ]
                 , li [] [ text "Drupal, OJS" ]
                 , li [] [ text "Wireframing and Sitemapping" ]
@@ -301,13 +307,23 @@ viewPortfolioPage =
         [ div []
             [ h2 [] [ text "Portfolio" ]
             , div []
-                [ p [] [ text "At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
+                [ p [] [ text "You can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
                 , p [] [ text "The ", a [ href "https://library.wheaton.edu" ] [ text "Buswell library website" ], text " at Wheaton College is also one of my major achievements." ]
                 ]
             ]
         ]
 
 
+viewGitHubLink : Html Msg
+viewGitHubLink =
+    div [] [ a [ href "https://github.com/jeffnm" ] [ text "GitHub" ] ]
+
+
+viewEmailLink : Html Msg
+viewEmailLink =
+    div [] [ a [ href "mailto://jeffmudge+web@gmail.com" ] [ text "Email me" ] ]
+
+
 viewCopyright : Int -> Html Msg
 viewCopyright year =
-    div [] [ text ("Copyright " ++ String.fromInt year ++ " Jeffrey Mudge") ]
+    div [] [ text ("Copyright © " ++ String.fromInt year ++ " Jeffrey Mudge") ]
