@@ -5003,9 +5003,16 @@ var elm$time$Time$Posix = function (a) {
 var elm$time$Time$millisToPosix = elm$time$Time$Posix;
 var elm$time$Time$now = _Time_now(elm$time$Time$millisToPosix);
 var author$project$Main$getNewTime = A2(elm$core$Task$perform, author$project$Main$NewTime, elm$time$Time$now);
+var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
 var author$project$Main$init = function (flags) {
 	return _Utils_Tuple2(
-		{currentPage: author$project$Main$Home, pageTitle: 'Home', siteTitle: 'Jeffrey Mudge', year: 1970},
+		{
+			currentPage: author$project$Main$Home,
+			currentTime: elm$time$Time$millisToPosix(0),
+			pageTitle: 'Home',
+			siteTitle: 'Jeffrey Mudge',
+			timeZone: elm$time$Time$utc
+		},
 		author$project$Main$getNewTime);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5015,75 +5022,6 @@ var author$project$Main$subscriptions = function (_n0) {
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var elm$time$Time$flooredDiv = F2(
-	function (numerator, denominator) {
-		return elm$core$Basics$floor(numerator / denominator);
-	});
-var elm$time$Time$posixToMillis = function (_n0) {
-	var millis = _n0.a;
-	return millis;
-};
-var elm$time$Time$toAdjustedMinutesHelp = F3(
-	function (defaultOffset, posixMinutes, eras) {
-		toAdjustedMinutesHelp:
-		while (true) {
-			if (!eras.b) {
-				return posixMinutes + defaultOffset;
-			} else {
-				var era = eras.a;
-				var olderEras = eras.b;
-				if (_Utils_cmp(era.start, posixMinutes) < 0) {
-					return posixMinutes + era.offset;
-				} else {
-					var $temp$defaultOffset = defaultOffset,
-						$temp$posixMinutes = posixMinutes,
-						$temp$eras = olderEras;
-					defaultOffset = $temp$defaultOffset;
-					posixMinutes = $temp$posixMinutes;
-					eras = $temp$eras;
-					continue toAdjustedMinutesHelp;
-				}
-			}
-		}
-	});
-var elm$time$Time$toAdjustedMinutes = F2(
-	function (_n0, time) {
-		var defaultOffset = _n0.a;
-		var eras = _n0.b;
-		return A3(
-			elm$time$Time$toAdjustedMinutesHelp,
-			defaultOffset,
-			A2(
-				elm$time$Time$flooredDiv,
-				elm$time$Time$posixToMillis(time),
-				60000),
-			eras);
-	});
-var elm$core$Basics$ge = _Utils_ge;
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var elm$time$Time$toCivil = function (minutes) {
-	var rawDay = A2(elm$time$Time$flooredDiv, minutes, 60 * 24) + 719468;
-	var era = (((rawDay >= 0) ? rawDay : (rawDay - 146096)) / 146097) | 0;
-	var dayOfEra = rawDay - (era * 146097);
-	var yearOfEra = ((((dayOfEra - ((dayOfEra / 1460) | 0)) + ((dayOfEra / 36524) | 0)) - ((dayOfEra / 146096) | 0)) / 365) | 0;
-	var dayOfYear = dayOfEra - (((365 * yearOfEra) + ((yearOfEra / 4) | 0)) - ((yearOfEra / 100) | 0));
-	var mp = (((5 * dayOfYear) + 2) / 153) | 0;
-	var month = mp + ((mp < 10) ? 3 : (-9));
-	var year = yearOfEra + (era * 400);
-	return {
-		day: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
-		month: month,
-		year: year + ((month <= 2) ? 1 : 0)
-	};
-};
-var elm$time$Time$toYear = F2(
-	function (zone, time) {
-		return elm$time$Time$toCivil(
-			A2(elm$time$Time$toAdjustedMinutes, zone, time)).year;
-	});
-var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
 var author$project$Main$update = F2(
 	function (msg, model) {
 		if (msg.$ === 'Nav') {
@@ -5099,7 +5037,7 @@ var author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{currentPage: page, pageTitle: 'Resume'}),
+							{currentPage: page, pageTitle: 'Résumé'}),
 						elm$core$Platform$Cmd$none);
 				default:
 					return _Utils_Tuple2(
@@ -5113,9 +5051,7 @@ var author$project$Main$update = F2(
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
-					{
-						year: A2(elm$time$Time$toYear, elm$time$Time$utc, time)
-					}),
+					{currentTime: time}),
 				elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5217,7 +5153,7 @@ var author$project$Main$viewPortfolioPage = A2(
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('At some point I plan to create a new portfolio, but for now you can see some of the things I have worked on at '),
+									elm$html$Html$text('You can see some of the things I have worked on at '),
 									A2(
 									elm$html$Html$a,
 									_List_fromArray(
@@ -5707,7 +5643,7 @@ var author$project$Main$viewResumePage = A2(
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('HTML, CSS, PHP, JavaScript, Python')
+									elm$html$Html$text('HTML, CSS, PHP, JavaScript, Elm, Python')
 								])),
 							A2(
 							elm$html$Html$li,
@@ -5782,9 +5718,109 @@ var author$project$Main$viewCopyright = function (year) {
 		_List_fromArray(
 			[
 				elm$html$Html$text(
-				'Copyright ' + (elm$core$String$fromInt(year) + ' Jeffrey Mudge'))
+				'Copyright © ' + (elm$core$String$fromInt(year) + ' Jeffrey Mudge'))
 			]));
 };
+var author$project$Main$viewEmailLink = A2(
+	elm$html$Html$div,
+	_List_Nil,
+	_List_fromArray(
+		[
+			A2(
+			elm$html$Html$a,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$href('mailto://jeffmudge+web@gmail.com')
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('Email me')
+				]))
+		]));
+var author$project$Main$viewGitHubLink = A2(
+	elm$html$Html$div,
+	_List_Nil,
+	_List_fromArray(
+		[
+			A2(
+			elm$html$Html$a,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$href('https://github.com/jeffnm')
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('GitHub')
+				]))
+		]));
+var elm$time$Time$flooredDiv = F2(
+	function (numerator, denominator) {
+		return elm$core$Basics$floor(numerator / denominator);
+	});
+var elm$time$Time$posixToMillis = function (_n0) {
+	var millis = _n0.a;
+	return millis;
+};
+var elm$time$Time$toAdjustedMinutesHelp = F3(
+	function (defaultOffset, posixMinutes, eras) {
+		toAdjustedMinutesHelp:
+		while (true) {
+			if (!eras.b) {
+				return posixMinutes + defaultOffset;
+			} else {
+				var era = eras.a;
+				var olderEras = eras.b;
+				if (_Utils_cmp(era.start, posixMinutes) < 0) {
+					return posixMinutes + era.offset;
+				} else {
+					var $temp$defaultOffset = defaultOffset,
+						$temp$posixMinutes = posixMinutes,
+						$temp$eras = olderEras;
+					defaultOffset = $temp$defaultOffset;
+					posixMinutes = $temp$posixMinutes;
+					eras = $temp$eras;
+					continue toAdjustedMinutesHelp;
+				}
+			}
+		}
+	});
+var elm$time$Time$toAdjustedMinutes = F2(
+	function (_n0, time) {
+		var defaultOffset = _n0.a;
+		var eras = _n0.b;
+		return A3(
+			elm$time$Time$toAdjustedMinutesHelp,
+			defaultOffset,
+			A2(
+				elm$time$Time$flooredDiv,
+				elm$time$Time$posixToMillis(time),
+				60000),
+			eras);
+	});
+var elm$core$Basics$ge = _Utils_ge;
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var elm$time$Time$toCivil = function (minutes) {
+	var rawDay = A2(elm$time$Time$flooredDiv, minutes, 60 * 24) + 719468;
+	var era = (((rawDay >= 0) ? rawDay : (rawDay - 146096)) / 146097) | 0;
+	var dayOfEra = rawDay - (era * 146097);
+	var yearOfEra = ((((dayOfEra - ((dayOfEra / 1460) | 0)) + ((dayOfEra / 36524) | 0)) - ((dayOfEra / 146096) | 0)) / 365) | 0;
+	var dayOfYear = dayOfEra - (((365 * yearOfEra) + ((yearOfEra / 4) | 0)) - ((yearOfEra / 100) | 0));
+	var mp = (((5 * dayOfYear) + 2) / 153) | 0;
+	var month = mp + ((mp < 10) ? 3 : (-9));
+	var year = yearOfEra + (era * 400);
+	return {
+		day: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
+		month: month,
+		year: year + ((month <= 2) ? 1 : 0)
+	};
+};
+var elm$time$Time$toYear = F2(
+	function (zone, time) {
+		return elm$time$Time$toCivil(
+			A2(elm$time$Time$toAdjustedMinutes, zone, time)).year;
+	});
 var author$project$Main$viewFooter = function (model) {
 	return A2(
 		elm$html$Html$div,
@@ -5794,7 +5830,10 @@ var author$project$Main$viewFooter = function (model) {
 			]),
 		_List_fromArray(
 			[
-				author$project$Main$viewCopyright(model.year)
+				author$project$Main$viewCopyright(
+				A2(elm$time$Time$toYear, model.timeZone, model.currentTime)),
+				author$project$Main$viewGitHubLink,
+				author$project$Main$viewEmailLink
 			]));
 };
 var elm$html$Html$h1 = _VirtualDom_node('h1');
@@ -6026,7 +6065,7 @@ var author$project$Main$viewMenu = function (model) {
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('Resume')
+								elm$html$Html$text('Résumé')
 							])),
 						A2(
 						elm$html$Html$li,
