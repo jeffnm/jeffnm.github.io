@@ -1,3 +1,4 @@
+ /* CSS Custom Properties definitions */
 :root {
   --primary-bg-color: #cf5c36;
   --secondary-bg-color: #7c7c7c;
@@ -5,6 +6,23 @@
   --primary-color:#000000;
   --secondary-color: #eee5e9;
 }
+@media (min-width: 400px){
+  .portfolio {
+    --col-per-row: 1;
+  }
+}
+
+@media (min-width: 600px){
+  .portfolio {
+    --col-per-row: 2;
+  }
+}
+@media (min-width: 800px){
+  .portfolio {
+    --col-per-row: 3;
+  } 
+}
+
 
 body {
   margin: 0;
@@ -86,6 +104,25 @@ body {
 .skills {
 
 }
+
+.portfolio {
+  display: grid;
+  grid-template-columns: repeat(var(--col-per-row), 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.portfolio .box {
+  /*background-color: var(--tertiary-bg-color);*/
+  border: 1px solid grey;
+  padding: 1rem;
+}
+
+.box:hover {
+  background-blend-mode: darken;
+  background: #fff000;
+}
+
 .footer {
   position: absolute;
   margin: 0;
