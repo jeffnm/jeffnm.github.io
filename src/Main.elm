@@ -1,11 +1,9 @@
 module Main exposing (main)
 
--- import Html.Events exposing (onClick)
-
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class, href, rel)
-import Html.Events.Extra.Mouse as Mouse
+import Html.Events.Extra.Mouse as Mouse exposing (onClick)
 import Task exposing (Task)
 import Time exposing (..)
 
@@ -39,16 +37,19 @@ type Msg
     | NewTime Time.Posix
 
 
+initialModel : Model
+initialModel =
+    { siteTitle = "Jeffrey Mudge"
+    , pageTitle = "Home"
+    , currentPage = Portfolio
+    , currentTime = Time.millisToPosix 0
+    , timeZone = utc
+    }
+
+
 init : () -> ( Model, Cmd Msg )
 init flags =
-    ( { siteTitle = "Jeffrey Mudge"
-      , pageTitle = "Home"
-      , currentPage = Home
-      , currentTime = Time.millisToPosix 0
-      , timeZone = utc
-      }
-    , getNewTime
-    )
+    ( initialModel, getNewTime )
 
 
 subscriptions : Model -> Sub Msg
@@ -78,6 +79,11 @@ update msg model =
             ( { model | currentTime = time }, Cmd.none )
 
 
+getNewTime : Cmd Msg
+getNewTime =
+    Task.perform NewTime Time.now
+
+
 
 -- VIEW
 
@@ -95,38 +101,36 @@ viewBody : Model -> Html Msg
 viewBody model =
     Html.div [ class "wrapper" ]
         [ viewHeader model
-        , viewMenu model
-        , viewContent model
+        , viewMenu model.currentPage
+        , viewContent model.currentPage
         , viewFooter model
         ]
 
 
 viewHeader : Model -> Html Msg
 viewHeader model =
-    case model.pageTitle of
-        "Home" ->
-            div [ class "header" ]
-                [ node "link" [ rel "stylesheet", href "/css/style.css" ] []
-                , div [] [ h1 [] [ text model.siteTitle ] ]
-                ]
+    div [ class "header" ]
+        [ node "link" [ rel "stylesheet", href "/css/style.css" ] []
+        , viewTitle model
+        ]
+
+
+viewTitle : Model -> Html Msg
+viewTitle model =
+    case model.currentPage of
+        Home ->
+            div [] [ h1 [] [ text model.siteTitle ] ]
 
         _ ->
-            div [ class "header" ]
-                [ node "link" [ rel "stylesheet", href "/css/style.css" ] []
-                , div [] [ h1 [] [ text (model.siteTitle ++ " | " ++ model.pageTitle) ] ]
-                ]
+            div [] [ h1 [] [ text (model.siteTitle ++ " | " ++ model.pageTitle) ] ]
 
 
-viewMenu : Model -> Html Msg
-viewMenu model =
-    let
-        cp =
-            model.currentPage
-    in
+viewMenu : Page -> Html Msg
+viewMenu cp =
     Html.div [ class "menu" ]
         [ ol []
             [ li
-                [ Mouse.onClick (\event -> Nav Home)
+                [ onClick (\event -> Nav Home)
                 , if cp == Home then
                     class "active"
 
@@ -135,7 +139,7 @@ viewMenu model =
                 ]
                 [ text "Home" ]
             , li
-                [ Mouse.onClick (\event -> Nav Resume)
+                [ onClick (\event -> Nav Resume)
                 , if cp == Resume then
                     class "active"
 
@@ -144,7 +148,7 @@ viewMenu model =
                 ]
                 [ text "Résumé" ]
             , li
-                [ Mouse.onClick (\event -> Nav Portfolio)
+                [ onClick (\event -> Nav Portfolio)
                 , if cp == Portfolio then
                     class "active"
 
@@ -156,11 +160,11 @@ viewMenu model =
         ]
 
 
-viewContent : Model -> Html Msg
-viewContent model =
+viewContent : Page -> Html Msg
+viewContent page =
     let
         content =
-            case model.currentPage of
+            case page of
                 Home ->
                     viewHomePage
 
@@ -182,9 +186,13 @@ viewFooter model =
         ]
 
 
-getNewTime : Cmd Msg
-getNewTime =
-    Task.perform NewTime Time.now
+viewCopyright : Int -> Html Msg
+viewCopyright year =
+    div [] [ text ("Copyright © " ++ String.fromInt year ++ " Jeffrey Mudge") ]
+
+
+
+-- VIEW HTML MSG BLOCKS (no arguments)
 
 
 viewHomePage : Html Msg
@@ -303,14 +311,21 @@ viewResumePage =
 
 viewPortfolioPage : Html Msg
 viewPortfolioPage =
-    div []
-        [ div []
-            [ h2 [] [ text "Portfolio" ]
-            , div []
-                [ p [] [ text "You can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
-                , p [] [ text "The ", a [ href "https://library.wheaton.edu" ] [ text "Buswell library website" ], text " at Wheaton College is also one of my major achievements." ]
-                ]
-            ]
+    --div []
+    --    [ div []
+    --        [ h2 [] [ text "Portfolio" ]
+    --        , div []
+    --            [ p [] [ text "You can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
+    --            , p [] [ text "The ", a [ href "https://library.wheaton.edu" ] [ text "Buswell library website" ], text " at Wheaton College is also one of my major achievements." ]
+    --            ]
+    --        ]
+    --    ]
+    div [ class "portfolio" ]
+        [ div [ class "box" ] [ text "Entry one" ]
+        , div [ class "box" ] [ text "Entry two" ]
+        , div [ class "box" ] [ text "Entry two" ]
+        , div [ class "box" ] [ text "Entry two" ]
+        , div [ class "box" ] [ text "Entry two" ]
         ]
 
 
@@ -322,8 +337,3 @@ viewGitHubLink =
 viewEmailLink : Html Msg
 viewEmailLink =
     div [] [ a [ href "mailto://jeffmudge+web@gmail.com" ] [ text "Email me" ] ]
-
-
-viewCopyright : Int -> Html Msg
-viewCopyright year =
-    div [] [ text ("Copyright © " ++ String.fromInt year ++ " Jeffrey Mudge") ]
