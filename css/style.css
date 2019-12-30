@@ -24,6 +24,7 @@
 }
 
 
+/* Whole Site */
 body {
   margin: 0;
   padding: 0;
@@ -37,6 +38,7 @@ body {
   padding: 0;
   position: relative;
 }
+
 
 .header {
   background-color: var(--primary-bg-color);
@@ -76,11 +78,32 @@ body {
   color: var(--primary-color);
 }
 
+button:hover {
+  border-style: ridge;
+}
+button:active{
+  border-style: inset;
+}
+
 .mainContent {
   margin: 30px 30px 0 30px;
   max-width: 100%;
   padding-bottom: 4.5rem;
 }
+
+/* image styles  */
+img.thumbnail {
+  width: 80px;
+  /* height: 80px; */
+  float: left;
+  margin: 1em 1em 1em 0;
+}
+img.fullsize {
+  width: 95%;
+  margin: 1em;
+}
+
+/* Resume Specific styles */
 
 .resume .education>ol>li {
   margin-bottom: 1em;
@@ -101,15 +124,21 @@ body {
   margin-bottom: 10px;
 }
 
-.skills {
-
+.skills ul {
+  margin-left: 1em;
 }
+.skills {
+  margin-top:1.5em;
+}
+
+/* Portfolio styles */
 
 .portfolio {
   display: grid;
   grid-template-columns: repeat(var(--col-per-row), 1fr);
   grid-gap: 10px;
   grid-auto-rows: minmax(100px, auto);
+  margin-bottom: 2em;
 }
 
 .portfolio .box {
@@ -119,10 +148,66 @@ body {
 }
 
 .box:hover {
-  background-blend-mode: darken;
-  background: #fff000;
+  /* background-blend-mode: soft-light; */
+  background-color: var(--secondary-bg-color);
+  filter: brightness(160%);
 }
 
+.detailsOpened {
+  background-color: var(--tertiary-bg-color);
+}
+
+
+/* Modal styles */
+
+
+.modalfade {
+  background-color: rgba(0,0,0,0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}
+
+div.activemodal.modal {
+  z-index: 15;
+  left: 50%;
+  top: 15%;
+  transition-duration: 1s;
+  transition-timing-function: ease-out;
+}
+
+div.modal {
+    transition-property: width height background-color font-size left top color;
+    transition-duration: 1s;
+    transition-timing-function: ease-in;
+    background-color: rgba(255,255,255,1.0);
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    width: 700px;
+    height: auto;
+    max-height: 60%;
+    max-width: 95%;
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    transform: translate(-50%); 
+    overflow:scroll;
+}
+
+.modal > .close {
+  cursor: pointer;
+  font-size: larger;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  float: right;
+}
+
+
+/* Footer styles */
 .footer {
   position: absolute;
   margin: 0;
