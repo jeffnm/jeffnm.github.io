@@ -2,12 +2,13 @@ module Main exposing (main)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (class, href, rel)
-import Html.Events.Extra.Mouse as Mouse exposing (onClick)
-import Task exposing (Task)
+import Html.Attributes exposing (alt, class, href, rel, src)
+import Html.Events.Extra.Mouse exposing (onClick)
+import Task
 import Time exposing (..)
 
 
+main : Program () Model Msg
 main =
     Browser.document
         { init = init
@@ -23,6 +24,18 @@ type alias Model =
     , currentPage : Page
     , currentTime : Time.Posix
     , timeZone : Time.Zone
+    , portfolioModalOpened : Bool
+    , portfolioModalSelected : Maybe PortfolioEntryID
+    , portfolioContent : List PortfolioEntry
+    }
+
+
+type alias PortfolioEntry =
+    { id : PortfolioEntryID
+    , title : String
+    , briefContent : String
+    , detailContent : String
+    , imageUrl : Maybe String
     }
 
 
@@ -33,8 +46,15 @@ type Page
 
 
 type Msg
-    = Nav Page
+    = Modal (Maybe PortfolioEntryID)
+    | Nav Page
     | NewTime Time.Posix
+
+
+type PortfolioEntryID
+    = Coral
+    | Buswell
+    | HideModal
 
 
 initialModel : Model
@@ -44,6 +64,9 @@ initialModel =
     , currentPage = Portfolio
     , currentTime = Time.millisToPosix 0
     , timeZone = utc
+    , portfolioModalOpened = False
+    , portfolioModalSelected = Nothing
+    , portfolioContent = [ { id = Coral, title = "CORAL-ERM", briefContent = "Coral is great", detailContent = loremIpsem, imageUrl = Just "./images/CORALLandingPage.png" }, { id = Buswell, title = "Wheaton College Library Website", briefContent = "website work!", detailContent = "Drupal! So easy :)", imageUrl = Nothing } ]
     }
 
 
@@ -67,16 +90,34 @@ update msg model =
         Nav page ->
             case page of
                 Home ->
-                    ( { model | currentPage = page, pageTitle = "Home" }, Cmd.none )
+                    ( { model | currentPage = page, pageTitle = "Home", portfolioModalOpened = False, portfolioModalSelected = Nothing }, Cmd.none )
 
                 Resume ->
-                    ( { model | currentPage = page, pageTitle = "Résumé" }, Cmd.none )
+                    ( { model | currentPage = page, pageTitle = "Résumé", portfolioModalOpened = False, portfolioModalSelected = Nothing }, Cmd.none )
 
                 Portfolio ->
                     ( { model | currentPage = page, pageTitle = "Portfolio" }, Cmd.none )
 
         NewTime time ->
             ( { model | currentTime = time }, Cmd.none )
+
+        Modal portfolioEntry ->
+            if model.currentPage == Portfolio then
+                case portfolioEntry of
+                    Just Coral ->
+                        ( { model | portfolioModalOpened = True, portfolioModalSelected = Just Coral }, Cmd.none )
+
+                    Just Buswell ->
+                        ( { model | portfolioModalOpened = True, portfolioModalSelected = Just Buswell }, Cmd.none )
+
+                    Nothing ->
+                        ( { model | portfolioModalOpened = False, portfolioModalSelected = Nothing }, Cmd.none )
+
+                    Just HideModal ->
+                        ( { model | portfolioModalOpened = False }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
 
 
 getNewTime : Cmd Msg
@@ -99,10 +140,11 @@ view model =
 
 viewBody : Model -> Html Msg
 viewBody model =
-    Html.div [ class "wrapper" ]
+    Html.div
+        [ class "wrapper" ]
         [ viewHeader model
         , viewMenu model.currentPage
-        , viewContent model.currentPage
+        , viewContent model model.currentPage
         , viewFooter model
         ]
 
@@ -160,8 +202,8 @@ viewMenu cp =
         ]
 
 
-viewContent : Page -> Html Msg
-viewContent page =
+viewContent : Model -> Page -> Html Msg
+viewContent model page =
     let
         content =
             case page of
@@ -172,7 +214,7 @@ viewContent page =
                     viewResumePage
 
                 Portfolio ->
-                    viewPortfolioPage
+                    viewPortfolioPage model
     in
     Html.div [ class "mainContent" ] [ content ]
 
@@ -309,24 +351,74 @@ viewResumePage =
         ]
 
 
-viewPortfolioPage : Html Msg
-viewPortfolioPage =
-    --div []
-    --    [ div []
-    --        [ h2 [] [ text "Portfolio" ]
-    --        , div []
-    --            [ p [] [ text "You can see some of the things I have worked on at ", a [ href "https://github.com/jeffnm" ] [ text "GitHub" ], text "." ]
-    --            , p [] [ text "The ", a [ href "https://library.wheaton.edu" ] [ text "Buswell library website" ], text " at Wheaton College is also one of my major achievements." ]
-    --            ]
-    --        ]
-    --    ]
-    div [ class "portfolio" ]
-        [ div [ class "box" ] [ text "Entry one" ]
-        , div [ class "box" ] [ text "Entry two" ]
-        , div [ class "box" ] [ text "Entry two" ]
-        , div [ class "box" ] [ text "Entry two" ]
-        , div [ class "box" ] [ text "Entry two" ]
+viewPortfolioPage : Model -> Html Msg
+viewPortfolioPage model =
+    div []
+        [ div [ class "portfolio" ]
+            (List.map (viewPortfolioEntry model.portfolioModalSelected) model.portfolioContent)
+        , div []
+            [ div
+                (if model.portfolioModalOpened then
+                    [ class "modalfade", onClick (\event -> Modal (Just HideModal)) ]
+
+                 else
+                    []
+                )
+                []
+            , div (viewModalActiveClasses model.portfolioModalOpened) (viewPortfolioModalCloseButton ++ List.map (viewPortfolioEntryDetailModal model.portfolioModalSelected) model.portfolioContent)
+            ]
         ]
+
+
+viewPortfolioModalCloseButton : List (Html Msg)
+viewPortfolioModalCloseButton =
+    [ button [ class "close", onClick (\event -> Modal (Just HideModal)) ] [ text "X" ] ]
+
+
+viewPortfolioEntry : Maybe PortfolioEntryID -> PortfolioEntry -> Html Msg
+viewPortfolioEntry modalID portfolioentry =
+    let
+        detailsOpened =
+            if modalID == Just portfolioentry.id then
+                [ class "detailsOpened" ]
+
+            else
+                []
+
+        image =
+            viewPortfolioEntryImage portfolioentry "thumbnail"
+    in
+    div ([ class "box", onClick (\event -> Modal (Just portfolioentry.id)) ] ++ detailsOpened)
+        
+         [image, h2 [] [ text portfolioentry.title ]
+               , p []
+                    [ text portfolioentry.briefContent
+                    ]
+               ]
+        
+
+
+viewPortfolioEntryImage : PortfolioEntry -> String ->Html Msg
+viewPortfolioEntryImage portfolioentry imageType =
+    case portfolioentry.imageUrl of
+        Nothing ->
+            div [] []
+
+        Just imageUrl ->
+            img [ src imageUrl, alt ("Illustration for " ++ portfolioentry.title), class imageType ] []
+
+
+viewPortfolioEntryDetailModal : Maybe PortfolioEntryID -> PortfolioEntry -> Html Msg
+viewPortfolioEntryDetailModal modalID portfolioentry =
+    let
+        image =
+            viewPortfolioEntryImage portfolioentry "fullsize"
+    in
+    if modalID == Just portfolioentry.id then
+        div [] [ h1 [] [ text portfolioentry.title ], image,  p [] [ text portfolioentry.detailContent ] ]
+
+    else
+        div [] []
 
 
 viewGitHubLink : Html Msg
@@ -337,3 +429,17 @@ viewGitHubLink =
 viewEmailLink : Html Msg
 viewEmailLink =
     div [] [ a [ href "mailto://jeffmudge+web@gmail.com" ] [ text "Email me" ] ]
+
+
+viewModalActiveClasses : Bool -> List (Attribute Msg)
+viewModalActiveClasses opened =
+    if opened then
+        [ class "activemodal", class "modal" ]
+
+    else
+        [ class "modal" ]
+
+
+loremIpsem : String
+loremIpsem =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at consectetur erat, quis porta leo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent ac pharetra nisl, nec convallis risus. Praesent eu dolor eu nunc placerat euismod non ac arcu. Duis ultrices pretium lacus, sit amet tempor massa fermentum et. Nunc sed suscipit nunc. Nullam condimentum, justo nec ultrices mollis, neque nibh egestas erat, vel ullamcorper risus est eu tellus. Ut congue viverra porttitor. Sed rutrum, neque eu congue lobortis, leo augue dignissim diam, vitae suscipit dolor erat vel nisi. Sed convallis magna arcu, ut gravida ipsum vestibulum eu. Fusce vel orci ut urna interdum cursus. Nullam dignissim congue mauris sit amet scelerisque.\n\nMorbi ac erat a diam laoreet porta in vitae lectus. Nam eleifend lobortis velit, quis maximus risus tincidunt ac. Morbi eu odio sollicitudin, convallis mi sed, euismod purus. Maecenas vulputate, nisi eu viverra faucibus, risus turpis gravida sapien, sit amet fermentum urna urna sed dui. Fusce non nisi eget enim placerat mollis. In suscipit ut neque eget dapibus. Cras a magna diam. Aenean at sapien non nisl gravida fermentum non vitae mi. Nunc ornare arcu vitae libero interdum, sit amet vehicula arcu auctor. Vestibulum interdum ullamcorper nibh id condimentum. Curabitur id velit id tortor porta faucibus. Nunc varius est sed elit laoreet, gravida facilisis mi euismod. Suspendisse nec mattis enim.\n\nFusce venenatis non ipsum eu eleifend. Nulla vel elit a nisl viverra mattis et eget mauris. Maecenas semper vestibulum metus nec tristique. Cras viverra risus mi. Aenean ornare diam eget lacus laoreet, quis laoreet tellus hendrerit. Morbi vitae lectus faucibus, tempor ipsum sit amet, malesuada nisi. Vestibulum lacinia lectus id ipsum placerat, eget ultricies nibh pharetra. Aliquam cursus est urna, nec placerat lacus mattis fermentum. In consequat dui ac purus interdum, sed cursus ipsum euismod. Sed ut metus eget ipsum dapibus ullamcorper. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse et mollis metus, in feugiat purus. Curabitur sodales sapien dictum nisi elementum, id ornare augue tincidunt. Donec imperdiet, lorem ut ultricies iaculis, urna sem facilisis magna, sed vehicula elit dui in purus. Nunc sed mauris et velit ultricies fringilla non sed ligula. Phasellus aliquam, lorem eu dictum fringilla, urna orci gravida dui, a dignissim eros augue in mauris. "
