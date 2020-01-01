@@ -98,7 +98,7 @@ img.thumbnail {
   float: left;
   margin: 1em 1em 1em 0;
 }
-img.fullsize {
+img.large {
   width: 95%;
   margin: 1em;
 }

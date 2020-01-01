@@ -1,11 +1,11 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (..)
+import Html exposing (Attribute, Html, a, br, button, div, h1, h2, h3, h4, img, li, node, ol, p, text, ul)
 import Html.Attributes exposing (alt, class, href, rel, src)
 import Html.Events.Extra.Mouse exposing (onClick)
 import Task
-import Time exposing (..)
+import Time
 
 
 main : Program () Model Msg
@@ -35,20 +35,31 @@ type alias PortfolioEntry =
     , title : String
     , briefContent : String
     , detailContent : String
-    , imageUrl : Maybe String
+    , imageThumbnail : ImageUrl
+    , imageLarge : ImageUrl
     }
 
 
-type Page
-    = Home
-    | Resume
-    | Portfolio
+type ImageUrl
+    = ImgUrl String
+    | NoImg
+
+
+type ImageType
+    = Thumbnail
+    | Large
 
 
 type Msg
     = Modal (Maybe PortfolioEntryID)
     | Nav Page
     | NewTime Time.Posix
+
+
+type Page
+    = Home
+    | Resume
+    | Portfolio
 
 
 type PortfolioEntryID
@@ -63,21 +74,40 @@ initialModel =
     , pageTitle = "Home"
     , currentPage = Portfolio
     , currentTime = Time.millisToPosix 0
-    , timeZone = utc
+    , timeZone = Time.utc
     , portfolioModalOpened = False
     , portfolioModalSelected = Nothing
-    , portfolioContent = [ { id = Coral, title = "CORAL-ERM", briefContent = "Coral is great", detailContent = loremIpsem, imageUrl = Just "./images/CORALLandingPage.png" }, { id = Buswell, title = "Wheaton College Library Website", briefContent = "website work!", detailContent = "Drupal! So easy :)", imageUrl = Nothing } ]
+    , portfolioContent = portfolioList
     }
 
 
 init : () -> ( Model, Cmd Msg )
-init flags =
+init _ =
     ( initialModel, getNewTime )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.none
+
+
+portfolioList : List PortfolioEntry
+portfolioList =
+    [ { id = Coral
+      , title = "CORAL-ERM"
+      , briefContent = "Coral is great"
+      , detailContent = loremIpsem
+      , imageThumbnail = ImgUrl "/images/CORALLandingPage.png"
+      , imageLarge = ImgUrl "/images/CORALLandingPage.png"
+      }
+    , { id = Buswell
+      , title = "Wheaton College Library Website"
+      , briefContent = "website work!"
+      , detailContent = "Drupal! So easy :)"
+      , imageThumbnail = NoImg
+      , imageLarge = NoImg
+      }
+    ]
 
 
 
@@ -172,7 +202,7 @@ viewMenu cp =
     Html.div [ class "menu" ]
         [ ol []
             [ li
-                [ onClick (\event -> Nav Home)
+                [ onClick (\_ -> Nav Home)
                 , if cp == Home then
                     class "active"
 
@@ -181,7 +211,7 @@ viewMenu cp =
                 ]
                 [ text "Home" ]
             , li
-                [ onClick (\event -> Nav Resume)
+                [ onClick (\_ -> Nav Resume)
                 , if cp == Resume then
                     class "active"
 
@@ -190,7 +220,7 @@ viewMenu cp =
                 ]
                 [ text "Résumé" ]
             , li
-                [ onClick (\event -> Nav Portfolio)
+                [ onClick (\_ -> Nav Portfolio)
                 , if cp == Portfolio then
                     class "active"
 
@@ -359,7 +389,7 @@ viewPortfolioPage model =
         , div []
             [ div
                 (if model.portfolioModalOpened then
-                    [ class "modalfade", onClick (\event -> Modal (Just HideModal)) ]
+                    [ class "modalfade", onClick (\_ -> Modal (Just HideModal)) ]
 
                  else
                     []
@@ -372,7 +402,7 @@ viewPortfolioPage model =
 
 viewPortfolioModalCloseButton : List (Html Msg)
 viewPortfolioModalCloseButton =
-    [ button [ class "close", onClick (\event -> Modal (Just HideModal)) ] [ text "X" ] ]
+    [ button [ class "close", onClick (\_ -> Modal (Just HideModal)) ] [ text "X" ] ]
 
 
 viewPortfolioEntry : Maybe PortfolioEntryID -> PortfolioEntry -> Html Msg
@@ -386,36 +416,53 @@ viewPortfolioEntry modalID portfolioentry =
                 []
 
         image =
-            viewPortfolioEntryImage portfolioentry "thumbnail"
+            viewPortfolioEntryImage portfolioentry Thumbnail
     in
-    div ([ class "box", onClick (\event -> Modal (Just portfolioentry.id)) ] ++ detailsOpened)
-        
-         [image, h2 [] [ text portfolioentry.title ]
-               , p []
-                    [ text portfolioentry.briefContent
-                    ]
-               ]
-        
+    div ([ class "box", onClick (\_ -> Modal (Just portfolioentry.id)) ] ++ detailsOpened)
+        [ image
+        , h2 [] [ text portfolioentry.title ]
+        , p []
+            [ text portfolioentry.briefContent
+            ]
+        ]
 
 
-viewPortfolioEntryImage : PortfolioEntry -> String ->Html Msg
+viewPortfolioEntryImage : PortfolioEntry -> ImageType -> Html Msg
 viewPortfolioEntryImage portfolioentry imageType =
-    case portfolioentry.imageUrl of
-        Nothing ->
-            div [] []
+    case imageType of
+        Thumbnail ->
+            let
+                imageTypeClass =
+                    "thumbnail"
+            in
+            case portfolioentry.imageThumbnail of
+                NoImg ->
+                    div [] []
 
-        Just imageUrl ->
-            img [ src imageUrl, alt ("Illustration for " ++ portfolioentry.title), class imageType ] []
+                ImgUrl imageUrl ->
+                    img [ src imageUrl, alt ("Illustration for " ++ portfolioentry.title), class imageTypeClass ] []
+
+        Large ->
+            let
+                imageTypeClass =
+                    "large"
+            in
+            case portfolioentry.imageLarge of
+                NoImg ->
+                    div [] []
+
+                ImgUrl imageUrl ->
+                    img [ src imageUrl, alt ("Illustration for " ++ portfolioentry.title), class imageTypeClass ] []
 
 
 viewPortfolioEntryDetailModal : Maybe PortfolioEntryID -> PortfolioEntry -> Html Msg
 viewPortfolioEntryDetailModal modalID portfolioentry =
     let
         image =
-            viewPortfolioEntryImage portfolioentry "fullsize"
+            viewPortfolioEntryImage portfolioentry Large
     in
     if modalID == Just portfolioentry.id then
-        div [] [ h1 [] [ text portfolioentry.title ], image,  p [] [ text portfolioentry.detailContent ] ]
+        div [] [ h1 [] [ text portfolioentry.title ], image, p [] [ text portfolioentry.detailContent ] ]
 
     else
         div [] []
